@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://c7tvtyc0tafmh"]
+
+[ext_resource type="PackedScene" uid="uid://boq1ugcr6unn6" path="res://scenes/Duck.tscn" id="1_kvfwu"]
+[ext_resource type="Script" uid="uid://w0cwknjtkwpk" path="res://scripts/track.gd" id="1_sms8e"]
+[ext_resource type="Script" uid="uid://cdbsw6kdjl3us" path="res://scripts/race.gd" id="3_mavp4"]
+
+[node name="Race" type="Node2D" unique_id=1467895305]
+script = ExtResource("1_sms8e")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1171553278]
+offset_right = 6000.0
+offset_bottom = 720.0
+color = Color(0.058412965, 0.06945679, 0.4409792, 1)
+
+[node name="PlayerDuck" parent="." unique_id=1805129652 instance=ExtResource("1_kvfwu")]
+position = Vector2(100, 300)
+
+[node name="FinishLine" type="ColorRect" parent="." unique_id=800670510]
+offset_left = 5500.0
+offset_right = 5530.0
+offset_bottom = 720.0
+color = Color(0.52547824, 0, 0.04552474, 1)
+
+[node name="Racers" type="Node2D" parent="." unique_id=1737728638]
+script = ExtResource("3_mavp4")

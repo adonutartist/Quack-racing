@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://boq1ugcr6unn6"]
+
+[ext_resource type="Script" uid="uid://caka8p4vu5pi7" path="res://scripts/duck.gd" id="1_bavlg"]
+
+[node name="Duck" type="Node2D" unique_id=1805129652]
+script = ExtResource("1_bavlg")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=961844007]
+
+[node name="Body" type="Polygon2D" parent="." unique_id=1761520652]
+polygon = PackedVector2Array(0, 1, 249, -2, 356, 153, 314, 227, -29, 227, -84, 156)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2065586620]
