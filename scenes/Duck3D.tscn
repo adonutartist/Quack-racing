@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://drk0aafdo054n"]
+
+[ext_resource type="Script" uid="uid://caka8p4vu5pi7" path="res://scripts/duck.gd" id="1_10w83"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t8f0y"]
+
+[node name="Duck3D" type="CharacterBody3D" unique_id=1064698459]
+script = ExtResource("1_10w83")
+
+[node name="Sprite" type="AnimatedSprite3D" parent="." unique_id=955473810]
+sprite_frames = SubResource("SpriteFrames_t8f0y")
+
+[node name="DustParticles" type="GPUParticles3D" parent="." unique_id=355606397]

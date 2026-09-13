@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://bsry841qnmapx"]
+
+[ext_resource type="Script" uid="uid://bfc26tkg41srq" path="res://scenes/race_3d.gd" id="1_t8f0y"]
+[ext_resource type="PackedScene" uid="uid://drk0aafdo054n" path="res://scenes/Duck3D.tscn" id="2_t8f0y"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pdst8"]
+albedo_color = Color(0.33394253, 0.13441205, 0.018431285, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_txj4k"]
+size = Vector3(6000, 50, 650)
+
+[node name="Race3D" type="Node3D" unique_id=2029864718]
+script = ExtResource("1_t8f0y")
+
+[node name="Track" type="MeshInstance3D" parent="." unique_id=106133812]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3000, -50, 0)
+material_override = SubResource("StandardMaterial3D_pdst8")
+mesh = SubResource("BoxMesh_txj4k")
+
+[node name="RaceCamera" type="Camera3D" parent="." unique_id=1278319880]
+transform = Transform3D(0.9996765, 0.0065357764, -0.024579752, 0.016322471, 0.5762895, 0.81708264, 0.01950532, -0.81721956, 0.57599634, 187.41626, 370.1881, 380.2663)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1501641069]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2382.9902, 3620.7969)
+light_energy = 16.0
+light_indirect_energy = 16.0
+light_volumetric_fog_energy = 16.0
+light_angular_distance = 15.21
+
+[node name="Duck3D" parent="." unique_id=1064698459 instance=ExtResource("2_t8f0y")]
+transform = Transform3D(50, 0, 0, 0, 22.482573, 44.660206, 0, -44.660206, 22.482573, 135.4432, 40.461365, 0)
