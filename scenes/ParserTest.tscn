@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bchyvlj1klps4"]
+
+[ext_resource type="Script" uid="uid://cm6xgyiq8uocs" path="res://scripts/test_duck_sheet_parser.gd" id="1_nyh4d"]
+
+[node name="ParserTest" type="Node2D" unique_id=1584420353]
+script = ExtResource("1_nyh4d")
