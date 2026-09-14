@@ -1,24 +1,29 @@
 [gd_scene format=3 uid="uid://bsry841qnmapx"]
 
-[ext_resource type="Script" uid="uid://bfc26tkg41srq" path="res://scenes/race_3d.gd" id="1_t8f0y"]
+[ext_resource type="Script" uid="uid://bfc26tkg41srq" path="res://scripts/race_3d.gd" id="1_t8f0y"]
+[ext_resource type="Shader" uid="uid://cujpbm7ei63qo" path="res://scripts/Race3D.gdshader" id="2_mb3s2"]
 [ext_resource type="PackedScene" uid="uid://drk0aafdo054n" path="res://scenes/Duck3D.tscn" id="2_t8f0y"]
+[ext_resource type="Texture2D" uid="uid://cmqx46bo2iu2r" path="res://assets/racetrackplaceholder.png" id="3_40qhx"]
+[ext_resource type="Script" uid="uid://cfly4j1hm2rsv" path="res://scripts/gauge.gd" id="5_r7vfl"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pdst8"]
-albedo_color = Color(0.33394253, 0.13441205, 0.018431285, 1)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_40qhx"]
+render_priority = 0
+shader = ExtResource("2_mb3s2")
+shader_parameter/track_texture = ExtResource("3_40qhx")
 
 [sub_resource type="BoxMesh" id="BoxMesh_txj4k"]
-size = Vector3(6000, 50, 650)
+size = Vector3(6000, 500, 650)
 
 [node name="Race3D" type="Node3D" unique_id=2029864718]
 script = ExtResource("1_t8f0y")
 
 [node name="Track" type="MeshInstance3D" parent="." unique_id=106133812]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3000, -50, 0)
-material_override = SubResource("StandardMaterial3D_pdst8")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3000, -500, 0)
+material_override = SubResource("ShaderMaterial_40qhx")
 mesh = SubResource("BoxMesh_txj4k")
 
 [node name="RaceCamera" type="Camera3D" parent="." unique_id=1278319880]
-transform = Transform3D(0.9996765, 0.0065357764, -0.024579752, 0.016322471, 0.5762895, 0.81708264, 0.01950532, -0.81721956, 0.57599634, 187.41626, 370.1881, 380.2663)
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, -75.45123, 527.9579)
 current = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1501641069]
@@ -29,4 +34,42 @@ light_volumetric_fog_energy = 16.0
 light_angular_distance = 15.21
 
 [node name="Duck3D" parent="." unique_id=1064698459 instance=ExtResource("2_t8f0y")]
-transform = Transform3D(50, 0, 0, 0, 22.482573, 44.660206, 0, -44.660206, 22.482573, 135.4432, 40.461365, 0)
+transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, 135.4432, -223.45868, 76.536804)
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1078744309]
+
+[node name="Dashboard" type="Control" parent="HUD" unique_id=1334516238]
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+
+[node name="SpeedGauge" type="Control" parent="HUD/Dashboard" unique_id=1696920921]
+anchors_preset = 0
+offset_left = 250.0
+offset_right = 470.0
+offset_bottom = 220.0
+script = ExtResource("5_r7vfl")
+title = "Speed"
+
+[node name="PositionGauge" type="Control" parent="HUD/Dashboard" unique_id=2140522160]
+anchors_preset = 0
+offset_left = 500.0
+offset_right = 720.0
+offset_bottom = 220.0
+script = ExtResource("5_r7vfl")
+title = "Position"
+unit = "Rank"
+max_value = 10.0
+reverse = true
+
+[node name="FatigueGauge" type="Control" parent="HUD/Dashboard" unique_id=1482516446]
+anchors_preset = 0
+offset_left = 750.0
+offset_right = 970.0
+offset_bottom = 220.0
+script = ExtResource("5_r7vfl")
+title = "Fatigue"
+unit = "%"
+max_value = 100.0

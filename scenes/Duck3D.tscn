@@ -4,10 +4,38 @@
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_t8f0y"]
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_10w83"]
+direction = Vector3(-1, 0, 0)
+spread = 25.0
+initial_velocity_max = 30.0
+gravity = Vector3(0, -5, 0)
+
+[sub_resource type="QuadMesh" id="QuadMesh_10w83"]
+size = Vector2(3, 3)
+
 [node name="Duck3D" type="CharacterBody3D" unique_id=1064698459]
 script = ExtResource("1_10w83")
 
 [node name="Sprite" type="AnimatedSprite3D" parent="." unique_id=955473810]
+render_priority = 10
 sprite_frames = SubResource("SpriteFrames_t8f0y")
 
 [node name="DustParticles" type="GPUParticles3D" parent="." unique_id=355606397]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45286036, -0.5514816, -0.45290017)
+emitting = false
+lifetime = 0.5
+process_material = SubResource("ParticleProcessMaterial_10w83")
+draw_pass_1 = SubResource("QuadMesh_10w83")
+
+[node name="Shadow" type="Sprite3D" parent="." unique_id=1807895546]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, -0.1, -0.05)
+no_depth_test = true
+render_priority = -10
+
+[node name="NameLabel" type="Label3D" parent="." unique_id=2070354248]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16, 0.71, 0)
+billboard = 1
+no_depth_test = true
+render_priority = 20
+text = "YOU
+▼"

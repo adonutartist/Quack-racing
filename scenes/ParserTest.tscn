@@ -1,6 +1,29 @@
 [gd_scene format=3 uid="uid://bchyvlj1klps4"]
 
-[ext_resource type="Script" uid="uid://cm6xgyiq8uocs" path="res://scripts/test_duck_sheet_parser.gd" id="1_nyh4d"]
+[sub_resource type="GDScript" id="GDScript_p2y2l"]
+script/source = "extends Node2D
+
+const SHEET := preload(\"res://assets/player sheet with hair.png\")
+
+func _ready() -> void:
+	var image := SHEET.get_image()
+
+	var frames := DuckSheetParser.create_sprite_frames(image)
+
+	if frames == null:
+		print(\"FAILED: Could not create SpriteFrames.\")
+		return
+
+	var sprite := AnimatedSprite2D.new()
+	sprite.sprite_frames = frames
+	sprite.animation = \"walk\"
+	sprite.position = Vector2(300, 200)
+	sprite.scale = Vector2(3, 3)
+
+	add_child(sprite)
+
+	sprite.play(\"walk\")
+"
 
 [node name="ParserTest" type="Node2D" unique_id=1584420353]
-script = ExtResource("1_nyh4d")
+script = SubResource("GDScript_p2y2l")
