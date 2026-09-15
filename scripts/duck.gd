@@ -1,10 +1,27 @@
 extends CharacterBody3D
 @onready var shadow: Sprite3D = $Shadow
+var race_started: bool = false
+var passive_speed: float = 150.0
+var fatigue: float = 0.0
+var fatigue_recovery: float = 18.0
+var perfect_boost: float = 110.0
+var good_boost: float = 55.0
+var bot_target_radius: float = 115.0
+var bot_target_speed: float = 85.0
+var bot_hit_radius: float = 55.0
+var bot_smash_cooldown: float = 0.0
+var time_since_last_smash: float = 999.0
 var racer_name: String = "YOU"
 var smash_times: Array[float] = []
 var smash_cps: float = 0.0
 @onready var name_label: Label3D = $NameLabel
 var is_bot: bool = false
+var bot_dash_active: bool = false
+var bot_dash_time: float = 0.0
+var bot_dash_duration: float = 0.5
+var bot_start_combo: Array[String] = []
+var bot_combo_success: bool = false
+var bot_dash_pending: bool = false
 var finish_x: float = 5500.0
 var speed: float = 0.0
 var max_speed: float = 500.0
@@ -122,6 +139,27 @@ func make_frame(region: Rect2) -> AtlasTexture:
 	frame.region = region
 	return frame
 func _process(delta: float) -> void:
+	if bot_dash_active:
+		bot_dash_time += delta
+		var jump_progress: float = bot_dash_time / bot_dash_duration
+		if jump_progress < 0.5:
+			position.y = lerp(
+				-245.0,
+				-120.0,
+				jump_progress * 2.0
+			)
+		else:
+			position.y = lerp(
+				-120.0,
+				-245.0,
+				(jump_progress - 0.5) * 2.0
+			)
+	if bot_dash_time >= bot_dash_duration:
+		bot_dash_active = false
+		position.y = -245.0
+	if not race_started:
+		return
+	time_since_last_smash += delta
 	if has_finished:
 		speed = move_toward(speed, 0.0, 250.0 * delta)
 		position.x += speed * delta
@@ -134,17 +172,8 @@ func _process(delta: float) -> void:
 		1.0
 	)
 	if is_bot:
-		bot_smash_timer -= delta
-		if bot_smash_timer <= 0.0:
-			speed += smash_power
-			speed = min(speed, max_speed)
-			bot_smash_timer = randf_range(0.08, 0.25)
-	else:
-		if Input.is_action_just_pressed("smash"):
-			speed += smash_power
-			speed = min(speed, max_speed)
-			smash_times.append(Time.get_ticks_msec() / 1000.0)
-	
+		bot_timing_smash(delta)
+		
 	# CALCULATE CPS
 	var current_time: float = Time.get_ticks_msec() / 1000.0
 	while not smash_times.is_empty() and current_time - smash_times[0] > 1.0:
@@ -156,13 +185,58 @@ func _process(delta: float) -> void:
 		race_progress
 	)
 	speed -= current_slowdown * delta
-	if speed < 20.0:
-		speed = 0.0
+	if speed < passive_speed:
+		speed = move_toward(
+			speed,
+			passive_speed,
+			180.0 * delta
+		)
+	if time_since_last_smash > 0.25:
+		fatigue -= fatigue_recovery * delta
+	fatigue = clamp(fatigue, 0.0, 100.0)
+	if fatigue > 80.0:
+		speed -= 35.0 * delta
+	if fatigue > 95.0:
+		speed -= 70.0 * delta
 	position.x += speed * delta
 	if position.x >= finish_x - 120.0:
 		has_finished = true
 	update_animation()
 	update_particles()
+func bot_timing_smash(delta: float) -> void:
+	if not is_bot or has_finished:
+		return
+	bot_target_radius -= bot_target_speed * delta
+	if bot_target_radius <= bot_hit_radius:
+		bot_target_radius = 115.0
+		var accuracy: float = randf()
+		if accuracy < 0.70:
+			attempt_smash("perfect")
+		elif accuracy < 0.90:
+			attempt_smash("good")
+		else:
+			attempt_smash("miss")
+func attempt_smash(quality: String) -> void:
+	if has_finished:
+		return
+	time_since_last_smash = 0.0
+	smash_times.append(
+		Time.get_ticks_msec() / 1000.0
+	)
+	match quality:
+		"perfect":
+			var boost: float = perfect_boost
+			# Fatigue inversly proportionsal to boost and cps
+			boost *= 1.0 - (fatigue / 200.0)
+			speed += boost
+			fatigue += 2.0
+		"good":
+			speed += good_boost
+			fatigue += 5.0
+		"miss":
+			fatigue += 12.0
+	fatigue = clamp(fatigue, 0.0, 100.0)
+	speed = min(speed, max_speed)
 func update_animation() -> void:
 	if has_finished:
 		sprite.speed_scale = 1.0
@@ -199,3 +273,23 @@ func update_particles() -> void:
 		lerp(2.0, 8.0, speed / max_speed)
 	)
 	dust_particles.amount = particle_amount
+func generate_bot_start_combo() -> void:
+	var letters := [
+		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+	]
+	bot_start_combo.clear()
+	for i in range(4):
+		bot_start_combo.append(letters.pick_random())
+	# Bots have different chances of completing the combo.
+	var success_chance: float = randf()
+	if success_chance < 0.65:
+		bot_combo_success = true
+		bot_dash_pending = true
+	else:
+		bot_combo_success = false
+		bot_dash_pending = false
+func trigger_bot_jump_dash() -> void:
+	speed += 220.0
+	speed = min(speed, max_speed)
+	bot_dash_active = true
+	bot_dash_time = 0.0

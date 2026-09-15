@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://drk0aafdo054n" path="res://scenes/Duck3D.tscn" id="2_t8f0y"]
 [ext_resource type="Texture2D" uid="uid://cmqx46bo2iu2r" path="res://assets/racetrackplaceholder.png" id="3_40qhx"]
 [ext_resource type="Script" uid="uid://cfly4j1hm2rsv" path="res://scripts/gauge.gd" id="5_r7vfl"]
+[ext_resource type="Script" uid="uid://5oy0okubqqrj" path="res://scripts/timing_ring.gd" id="6_w2hfh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_40qhx"]
 render_priority = 0
@@ -23,8 +24,9 @@ material_override = SubResource("ShaderMaterial_40qhx")
 mesh = SubResource("BoxMesh_txj4k")
 
 [node name="RaceCamera" type="Camera3D" parent="." unique_id=1278319880]
-transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, -75.45123, 527.9579)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 326.7257, -75.45123, 623.9435)
 current = true
+fov = 60.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1501641069]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2382.9902, 3620.7969)
@@ -34,7 +36,7 @@ light_volumetric_fog_energy = 16.0
 light_angular_distance = 15.21
 
 [node name="Duck3D" parent="." unique_id=1064698459 instance=ExtResource("2_t8f0y")]
-transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, 135.4432, -223.45868, 76.536804)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 135.443, -245, 76.537)
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1078744309]
 
@@ -73,3 +75,31 @@ script = ExtResource("5_r7vfl")
 title = "Fatigue"
 unit = "%"
 max_value = 100.0
+
+[node name="TimingRing" type="Control" parent="HUD" unique_id=1566739407]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -228.005
+offset_top = -260.0
+offset_right = 31.994629
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(2, 2)
+script = ExtResource("6_w2hfh")
+
+[node name="StartCountdown" type="RichTextLabel" parent="HUD" unique_id=1544542650]
+offset_left = 401.175
+offset_top = 254.89
+offset_right = 829.175
+offset_bottom = 454.89
+theme_override_font_sizes/normal_font_size = 47
+bbcode_enabled = true
+text = "Ready to WADDLE?"
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
